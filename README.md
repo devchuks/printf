@@ -1,2 +1,2 @@
 # printf
-custom printf implementation
+A custom printf implementation by Habiibullah Ajiboye and Jason Uzoukwu
