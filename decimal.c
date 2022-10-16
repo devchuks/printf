@@ -1,39 +1,71 @@
 #include "main.h"
+
 /**
- * rot13 - encrypts string with rot13
- * @list: string to change
- * Return: modified string
- */
-char *rot13(va_list list)
+ * _itos - makes an int a string
+ * @div: multiple of 10
+ * @length: length of number
+ * @n: number to convert to string
+ * Return: string
+ **/
+char *_itos(int div, int length, int n)
 {
-	int i = 0;
 	char *str;
-	char *nstr;
+	int i = 0;
 
-	/* store va_arg to only access argument once */
-	str = va_arg(list, char *);
-
-	/* malloc new variable to assign over new rot13 characters */
-	nstr = malloc(sizeof(char) * (_strlen(str) + 1));
-	if (nstr == NULL)
+	str = malloc(sizeof(char) * length + 2);
+	if (str == NULL)
 		return (NULL);
 
-	/* iterate str and assign rot13 char to nstr */
-	while (str[i] != '\0')
+	if (n < 0) /* account for negative sign */
 	{
-		if ((str[i] >= 'a' && str[i] <= 'm') || (str[i] >= 'A' && str[i] <= 'M'))
-		{
-			nstr[i] = str[i] + 13;
-		}
-		else if ((str[i] >= 'n' && str[i] <= 'z') || (str[i] >= 'N' && str[i] <= 'Z'))
-		{
-			nstr[i] = str[i] - 13;
-		}
-		else
-			(nstr[i] = str[i]);
+		str[0] = '-';
 		i++;
 	}
-	nstr[i] = '\0';
+	while (n < 0) /* convert each num to string */
+	{
+		str[i] = ((n / div) * -1 + '0'); /* *-1 to handle min int */
+		n = n % div;
+		div /= 10;
+		i++;
+	}
+	while (div >= 1) /* same, this case for positives */
+	{
+		str[i] = ((n / div) + '0');
+		n = n % div;
+		div /= 10;
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
 
-	return (nstr);
+/**
+ * print_d - gets length to put in _itos
+ * @list: takes arg
+ * Return: integar string
+ **/
+char *print_d(va_list list)
+{
+	int length, div, n, temp;
+
+	n = va_arg(list, int);
+	temp = n;
+	length = 0;
+	div = 1;
+
+	if (n == 0) /* account for 0 having length 1 */
+	{
+		length++;
+		return (_itos(div, length, n));
+	}
+
+	while (temp != 0) /* find multiple of ten to divide */
+	{
+		length += 1;
+		if (length > 1)
+			div *= 10;
+		temp /= 10;
+	}
+
+	return (_itos(div, length, n));
 }
